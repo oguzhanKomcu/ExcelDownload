@@ -24,7 +24,7 @@ namespace ExcelDownload.Controllers
         public void ExcellCreate()
         {
             // Veritabanı bağlantı dizesi
-            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=Northwind;Integrated Security=True;Trusted_Connection=True;";
+            string connString = "Data Source=Server_Name;Initial Catalog=Northwind;Integrated Security=True;Trusted_Connection=True;";
 
             // Veritabanı sorgusu
             string query = "SELECT * FROM Employees";
