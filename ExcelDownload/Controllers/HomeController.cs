@@ -70,6 +70,67 @@ namespace ExcelDownload.Controllers
              response.Body.FlushAsync();
         }
 
+        [HttpGet]
+        public IActionResult ExcellCreateNoPackage()
+        {
+
+
+
+
+            //Veritabanı bağlantı dizesiererer
+            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=Northwind;Integrated Security=True;Trusted_Connection=True;";
+
+            //Veritabanı sorgusu
+            string query = "SELECT * FROM Employees";
+            //string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MyDatabase;Integrated Security=True";
+
+            //// SQL sorgusu
+            //string sql = "SELECT * FROM MyTable";
+
+            // SQL sorgusundan verileri alma
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+
+            // HTML tablosu oluşturma
+            StringBuilder html = new StringBuilder();
+            html.Append("<table border='1'>");
+            // Sütun başlıkları
+            html.Append("<tr>");
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                html.Append("<th>");
+                html.Append(column.ColumnName);
+                html.Append("</th>");
+            }
+            html.Append("</tr>");
+            // Veriler
+            foreach (DataRow row in dataTable.Rows)
+            {
+                html.Append("<tr>");
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    html.Append("<td>");
+                    html.Append(row[column.ColumnName]);
+                    html.Append("</td>");
+                }
+                html.Append("</tr>");
+            }
+            html.Append("</table>");
+
+            // Dosya adı
+            string fileName = "MyTable_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
+
+            // Dosya oluşturma ve yazma işlemleri
+            byte[] bytes = Encoding.UTF8.GetBytes(html.ToString());
+            MemoryStream stream = new MemoryStream(bytes);
+            return File(stream, "application/vnd.ms-excel", fileName);
+        }
+
 
         public IActionResult Privacy()
         {
